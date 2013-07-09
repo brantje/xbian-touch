@@ -136,9 +136,4 @@ while True:
                 d.fire_event(rev)
                 holdtime = 0
             if holdtime > 1.5:
-                rev.code = BTN_TOUCH
-                rev.value = 1
-                d.fire_event(rev)
-                rev.value = 0
-                d.fire_event(rev)
                 holdtime = 0
