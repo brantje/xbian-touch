@@ -52,5 +52,5 @@ echo "Moving config..."
 sudo mv uimapper.conf /etc/init
 echo "Cleaning up..."
 rm uimapper.tar.gz
-rm tslib_1-1_armhf.deb
+rm tslib_1-1_armhf.deb > /dev/null
 sudo reboot
