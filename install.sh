@@ -50,6 +50,9 @@ if [ ! -f /etc/pointercal ]; then
 	respawn" >> uimapper.conf
 	echo "Moving config..."
 	sudo mv uimapper.conf /etc/init
+	sudo chmod +x /scripts/uinput-mapper/input-create.py
+	sudo chmod +x /scripts/uinput-mapper/input-read.py
+
 	echo "Cleaning up..."
 	rm uimapper.tar.gz
 	rm tslib_1-1_armhf.deb > /dev/null #Silent error
