@@ -1,5 +1,5 @@
 from uinputmapper.cinput import *
-import subprocess
+mport subprocess
 
 #Read screen resolution from tvservice (not framebuffer)
 sres = subprocess.check_output("tvservice -s", shell=True)
@@ -38,8 +38,8 @@ xcalib = xsres / float(xres)
 ycalib = ysres / float(yres)
 
 if swap == 0:
-   xymix, xscale = xscale, xymix
-   yxmix, yscale = yscale, yxmix
+    xymix, xscale = xscale, xymix
+    yxmix, yscale = yscale, yxmix
 
 #print xscale, xymix, xoffset, yxmix, yscale, yoffset, scaler, xres, yres, swap
 
@@ -56,9 +56,12 @@ y_value = transform_y
 
 X_ABS = ABS_X
 Y_ABS = ABS_Y
+X_ABS_MT_POSITION = ABS_MT_POSITION_X
+Y_ABS_MT_POSITION = ABS_MT_POSITION_Y
 
 if swap == 1:
     X_ABS, Y_ABS = Y_ABS, X_ABS
+    X_ABS_MT_POSITION, Y_ABS_MT_POSITION = Y_ABS_MT_POSITION, X_ABS_MT_POSITION
     x_value, y_value = y_value, x_value
 
 config = {
@@ -78,6 +81,28 @@ config = {
                 'type' : (0, EV_ABS),
                 'code' : Y_ABS, 
                 'value' : y_value, 
+                'prop' : {
+                    'max' : 2047,
+                    'min' : 0,
+                    'flat' : 0,
+                    'fuzz' : 0
+                }
+            },
+            ABS_MT_POSITION_X : {
+                'type' : (0, EV_ABS),
+                'code' : X_ABS_MT_POSITION,
+                'value' : x_value,
+                'prop' : {
+                    'max' : 2047,
+                    'min' : 0,
+                    'flat' : 0,
+                    'fuzz' : 0
+                }
+            },
+            ABS_MT_POSITION_Y : {
+                'type' : (0, EV_ABS),
+                'code' : Y_ABS_MT_POSITION,
+                'value' : y_value,
                 'prop' : {
                     'max' : 2047,
                     'min' : 0,

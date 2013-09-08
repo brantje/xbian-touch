@@ -1,19 +1,4 @@
 from uinputmapper.cinput import *
-import subprocess
-
-#Read screen resolution from tvservice (not framebuffer)
-sres = subprocess.check_output("tvservice -s", shell=True)
-sres = sres.split(", ")
-sres = sres[1].split(" @")
-sres = sres[0].split("x")
-xsres = int(sres[0])
-ysres = int(sres[1])
-xmres = 1280
-ymres = 720
-
-if xsres >= xmres:
-    xsres = xmres
-    ysres = ymres
 
 # Read ts_calibrate data from /etc/pointercal
 filename = "/etc/pointercal"
@@ -33,22 +18,26 @@ scaler = data[6]
 xres = data[7]
 yres = data[8]
 swap = data[9]
-
-xcalib = xsres / float(xres)
-ycalib = ysres / float(yres)
+#xres = 720
+#yres = 576
+xmres = 1280
+ymres = 720
 
 if swap == 0:
-   xymix, xscale = xscale, xymix
-   yxmix, yscale = yscale, yxmix
+    xymix, xscale = xscale, xymix
+    yxmix, yscale = yscale, yxmix
+#else:
+#    xres, yres = yres, xres
+#    xmres, ymres = ymres, xmres
 
 #print xscale, xymix, xoffset, yxmix, yscale, yoffset, scaler, xres, yres, swap
 
 def transform_x(x):
-    x = (x*xscale + xoffset)*xcalib/(scaler) + (xmres - xsres)
+    x = (x*xscale + xoffset)/(scaler)
     return int(x)
 
 def transform_y(y):
-    y = (y*yscale + yoffset)*ycalib/(scaler) + (ymres - ysres)
+    y = (y*yscale + yoffset)/(scaler)
     return int(y)
 
 x_value = transform_x
@@ -56,9 +45,12 @@ y_value = transform_y
 
 X_ABS = ABS_X
 Y_ABS = ABS_Y
+X_ABS_MT_POSITION = ABS_MT_POSITION_X
+Y_ABS_MT_POSITION = ABS_MT_POSITION_Y
 
 if swap == 1:
     X_ABS, Y_ABS = Y_ABS, X_ABS
+    X_ABS_MT_POSITION, Y_ABS_MT_POSITION = Y_ABS_MT_POSITION, X_ABS_MT_POSITION
     x_value, y_value = y_value, x_value
 
 config = {
@@ -78,6 +70,28 @@ config = {
                 'type' : (0, EV_ABS),
                 'code' : Y_ABS, 
                 'value' : y_value, 
+                'prop' : {
+                    'max' : 2047,
+                    'min' : 0,
+                    'flat' : 0,
+                    'fuzz' : 0
+                }
+            },
+            ABS_MT_POSITION_X : {
+                'type' : (0, EV_ABS),
+                'code' : X_ABS_MT_POSITION,
+                'value' : x_value,
+                'prop' : {
+                    'max' : 2047,
+                    'min' : 0,
+                    'flat' : 0,
+                    'fuzz' : 0
+                }
+            },
+            ABS_MT_POSITION_Y : {
+                'type' : (0, EV_ABS),
+                'code' : Y_ABS_MT_POSITION,
+                'value' : y_value,
                 'prop' : {
                     'max' : 2047,
                     'min' : 0,

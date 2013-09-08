@@ -72,6 +72,9 @@ ytouch = False
 intouch = False
 ptime = 0
 
+def sgn(x): 
+    return 1 if x > 0 else x and -1
+
 while True:
     if not args.compat:
         fd, ev = in_f.load()
@@ -113,15 +116,24 @@ while True:
         dy = ypos - pypos
         intouch = False
 	xtouch = False
-        ytouch = False
+        ytouch = False 
         inrange = (dx * dx) + (dy * dy)
         rtime = float(rev.time.tv_sec) + float(rev.time.tv_usec / 1000000.0)
         holdtime = rtime - ptime
+#        swipespeedx = dx / holdtime
+#        swipespeedy = dy / holdtime
+
+#swipe check
+
+#        if abs(swipespeedx) > 500 or abs(swipespeedy) > 500: 
+#            swipex = sgn(swipespeedx)
+#            swipey = 2 * sgn(swipespeedy)
+#            print "swipespeedx, y", swipespeedx, swipespeedy, swipex, swipey
 
 #Range and time check
-
+	
         if inrange <= 400:
-            if holdtime > 0.20 and holdtime <= 0.50:
+            if holdtime > 0.10 and holdtime <= 0.50:
                 rev.code = BTN_TOUCH
                 rev.value = 1
                 d.fire_event(rev)
